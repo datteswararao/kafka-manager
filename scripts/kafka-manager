@@ -1,6 +1,7 @@
 # chkconfig: - 99 10
 DAEMON_PATH=/opt/kafka-manager-1.3.2.1
 DAEMON_NAME=kafka-manager
+DAEMON_LOG_FILE=${DAEMON_PATH}/log/${DAEMON_NAME}.log
 # Check that networking is up.
 #[ ${NETWORKING} = "no" ] && exit 0
 
@@ -20,9 +21,9 @@ case "$1" in
                 sleep 300
                 PIDZOO=`pgrep -f /opt/kafka/config/zookeeper.properties`
         done
-        rm -r ${DAEMON_PATH}/log/kafka-manager.log
-        touch ${DAEMON_PATH}/log/kafka-manager.log
-        nohup $DAEMON_PATH/bin/kafka-manager -Dconfig.file=$DAEMON_PATH/conf/application.conf -Dhttp.port=9092 > /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log 2>&1 &
+        rm -r ${DAEMON_LOG_FILE}
+        touch ${DAEMON_LOG_FILE}
+        nohup $DAEMON_PATH/bin/kafka-manager -Dconfig.file=$DAEMON_PATH/conf/application.conf -Dhttp.port=9092 > ${DAEMON_LOG_FILE} 2>&1 &
         ;;
   stop)
         # Stop daemons.
