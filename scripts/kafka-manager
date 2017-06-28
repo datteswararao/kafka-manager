@@ -1,5 +1,5 @@
 # chkconfig: - 99 10
-DAEMON_PATH=/home/soa539/kafka-manager-1.3.2.1
+DAEMON_PATH=/opt/kafka-manager-1.3.2.1
 DAEMON_NAME=kafka-manager
 # Check that networking is up.
 #[ ${NETWORKING} = "no" ] && exit 0
@@ -18,8 +18,8 @@ case "$1" in
                 echo "Zoo Process is not up and running.. sleeping for 5 mins: ${datetime_ts}" > /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log
                 sleep 300
         else
-                rm -r /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log
-                touch /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log
+                rm -r ${DAEMON_PATH}/log/kafka-manager.log
+                touch ${DAEMON_PATH}/log/kafka-manager.log
                 nohup $DAEMON_PATH/bin/kafka-manager -Dconfig.file=$DAEMON_PATH/conf/application.conf -Dhttp.port=9092 > /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log 2>&1 &
         fi
         ;;
