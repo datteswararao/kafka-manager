@@ -1,0 +1,13 @@
+step 1) ssh to the Linux server as root
+step 2)  vi  /etc/init.d/kafka-manager  
+  -- use the file @ https://github.com/datteswararao/kafka-manager/blob/master/scripts/kafka-manager
+Step 3) chmod 755 /etc/init.d/kafka-manager
+Step 4) chkconfig --add kafka-manager
+Step 5) chkconfig kafka-manager on
+Step 6) test below
+sudo service kafka-manager start
+sudo service kafka-manager status
+sudo service kafka-manager stop
+sudo service kafka-manager restart
+Step 7) reboot
+Step 8) see the service starts at bootstrap of the instance or server.
