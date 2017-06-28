@@ -1,0 +1,59 @@
+# chkconfig: - 99 10
+DAEMON_PATH=/home/soa539/kafka-manager-1.3.2.1
+DAEMON_NAME=kafka-manager
+# Check that networking is up.
+#[ ${NETWORKING} = "no" ] && exit 0
+
+PATH=$PATH:$DAEMON_PATH
+
+# See how we were called.
+case "$1" in
+  start)
+        # Start daemon.
+        echo "Starting $DAEMON_NAME";
+        PIDZOO=`pgrep -f /opt/kafka/config/zookeeper.properties`
+        if [ -z "${PIDZOO}" ]; then
+                datetime_ts=`date`
+                echo "Zoo Process is not up and running.. sleeping for 5 mins ${datetime_ts}"
+                echo "Zoo Process is not up and running.. sleeping for 5 mins: ${datetime_ts}" > /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log
+                sleep 300
+        else
+                rm -r /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log
+                touch /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log
+                nohup $DAEMON_PATH/bin/kafka-manager -Dconfig.file=$DAEMON_PATH/conf/application.conf -Dhttp.port=9092 > /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log 2>&1 &
+        fi
+        ;;
+  stop)
+        # Stop daemons.
+        echo "Shutting down $DAEMON_NAME";
+        pid=`cat $DAEMON_PATH/RUNNING_PID`
+        if [ -n "$pid" ]
+          then
+          kill -9 $pid
+          chmod 755 $DAEMON_PATH/RUNNING_PID
+          chmod 755 $DAEMON_PATH/RUNNING_PID.old
+          mv $DAEMON_PATH/RUNNING_PID $DAEMON_PATH/RUNNING_PID.old
+        else
+          echo "Kafka-manager was not Running"
+        fi
+        ;;
+  restart)
+        $0 stop
+        sleep 2
+        $0 start
+        ;;
+  status)
+        pid=`cat $DAEMON_PATH/RUNNING_PID`
+        if [ -n "$pid" ]
+          then
+          echo "Kafka-manager is Running as PID: $pid"
+        else
+          echo "Kafka-manager is not Running"
+        fi
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart|status}"
+        exit 1
+esac
+
+exit 0
