@@ -9,19 +9,20 @@ PATH=$PATH:$DAEMON_PATH
 # See how we were called.
 case "$1" in
   start)
-        # Start daemon.
+       # Start daemon.
         echo "Starting $DAEMON_NAME";
         PIDZOO=`pgrep -f /opt/kafka/config/zookeeper.properties`
-        if [ -z "${PIDZOO}" ]; then
+        while  [ -z "${PIDZOO}" ]
+        do
                 datetime_ts=`date`
                 echo "Zoo Process is not up and running.. sleeping for 5 mins ${datetime_ts}"
                 echo "Zoo Process is not up and running.. sleeping for 5 mins: ${datetime_ts}" > /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log
                 sleep 300
-        else
-                rm -r ${DAEMON_PATH}/log/kafka-manager.log
-                touch ${DAEMON_PATH}/log/kafka-manager.log
-                nohup $DAEMON_PATH/bin/kafka-manager -Dconfig.file=$DAEMON_PATH/conf/application.conf -Dhttp.port=9092 > /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log 2>&1 &
-        fi
+                PIDZOO=`pgrep -f /opt/kafka/config/zookeeper.properties`
+        done
+        rm -r ${DAEMON_PATH}/log/kafka-manager.log
+        touch ${DAEMON_PATH}/log/kafka-manager.log
+        nohup $DAEMON_PATH/bin/kafka-manager -Dconfig.file=$DAEMON_PATH/conf/application.conf -Dhttp.port=9092 > /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log 2>&1 &
         ;;
   stop)
         # Stop daemons.
