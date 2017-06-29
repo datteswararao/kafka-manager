@@ -17,7 +17,7 @@ case "$1" in
         do
                 datetime_ts=`date`
                 echo "Zoo Process is not up and running.. sleeping for 5 mins ${datetime_ts}"
-                echo "Zoo Process is not up and running.. sleeping for 5 mins: ${datetime_ts}" > /home/soa539/kafka-manager-1.3.2.1/log/kafka-manager.log
+                echo "Zoo Process is not up and running.. sleeping for 5 mins: ${datetime_ts}" > ${DAEMON_PATH}/log/kafka-manager.log
                 sleep 300
                 PIDZOO=`pgrep -f /opt/kafka/config/zookeeper.properties`
         done
